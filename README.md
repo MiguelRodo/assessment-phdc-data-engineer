@@ -35,3 +35,8 @@ To execute the pipeline, run:
 At https://services6.arcgis.com/nyYfO9SxHU2ChQd9/arcgis/rest/services/Service_Requests_2023_until_20_May_2026/FeatureServer/0, the `Fields` key lists the following components:
 
 - Sub_Council, Ward, Surb, C3_Complaint_Type, Work_Center, Notification, Notification_type, X_Y_Co_ordinate_1, X_Y_coordinate_2, Created_On_Date, Changed_on, Completed_Date, Notifications_Created and ObjectId, which have string, integer, date or objectid types.
+
+### Issues with suburb column
+
+- Street addresses
+- Uninformative addresses
