@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 timeout = 5
 
-def log_n_records_total(url, timeout, params):
+def log_n_records_total(url, offset, timeout, params):
   count_data = extract_json(
     url,
     timeout=timeout,
@@ -22,8 +22,8 @@ def log_n_records_total(url, timeout, params):
         "returnCountOnly": "true",
     }
   )
-  expected_count = count_data["count"]
-  logger.info("ArcGIS reports %d matching rows", expected_count)
+  expected_count = count_data["count"] - offset
+  logger.info("ArcGIS reports %d matching rows after offset of %d rows", expected_count, offset)
   return expected_count
 
 def extract_attributes(data):
@@ -62,21 +62,21 @@ def save_csv(df, file_path):
     logger.info("Saved %d rows to %s", len(df), file_path)
     return file_path
 
-def extract_records(url, timeout=5, page_size=1000, max_records=None, file_path="data/raw/extracted_data.csv"):
+def extract_records(url, timeout=5, page_size=1000, max_records=None, offset=0, file_path="data/raw/extracted_data.csv"):
     params_base = {
         "f": "json",
         "where": "C3_Complaint_Type = 'No Power'",
         "outFields": "*",
         "resultRecordCount": page_size,
+        "resultsOffset": offset
     }
-    expected_count = log_n_records_total(url, timeout, params_base)
+    expected_count = log_n_records_total(url, offset, timeout, params_base)
     data = extract_json(url, timeout=timeout, params=params_base)
     pages = [extract_attributes(data)]
     fetched = len(pages[0])
     if max_records is not None and fetched >= max_records:
         pages[0] = pages[0].head(max_records)
         return save_csv(pd.concat(pages, ignore_index=True), file_path)
-    offset = 0
     logger.info("Fetched %d / %d rows (offset %d)", fetched, expected_count, offset)
     returned_all = get_returned_all(data)
     while not returned_all:
