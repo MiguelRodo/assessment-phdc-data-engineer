@@ -68,7 +68,7 @@ def extract_records(url, timeout=5, page_size=1000, max_records=None, offset=0, 
         "where": "C3_Complaint_Type = 'No Power'",
         "outFields": "*",
         "resultRecordCount": page_size,
-        "resultsOffset": offset
+        "resultOffset": offset
     }
     expected_count = log_n_records_total(url, offset, timeout, params_base)
     data = extract_json(url, timeout=timeout, params=params_base)
