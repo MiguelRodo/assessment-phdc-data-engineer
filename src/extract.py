@@ -62,7 +62,7 @@ def save_csv(df, file_path):
     logger.info("Saved %d rows to %s", len(df), file_path)
     return file_path
 
-def extract_records(url, timeout=5, page_size=1000, file_path="data/raw/extracted_data.csv"):
+def extract_records(url, timeout=5, page_size=1000, max_records=None, file_path="data/raw/extracted_data.csv"):
     params_base = {
         "f": "json",
         "where": "C3_Complaint_Type = 'No Power'",
@@ -73,6 +73,9 @@ def extract_records(url, timeout=5, page_size=1000, file_path="data/raw/extracte
     data = extract_json(url, timeout=timeout, params=params_base)
     pages = [extract_attributes(data)]
     fetched = len(pages[0])
+    if max_records is not None and fetched >= max_records:
+        pages[0] = pages[0].head(max_records)
+        return save_csv(pd.concat(pages, ignore_index=True), file_path)
     offset = 0
     logger.info("Fetched %d / %d rows (offset %d)", fetched, expected_count, offset)
     returned_all = get_returned_all(data)
@@ -84,6 +87,9 @@ def extract_records(url, timeout=5, page_size=1000, file_path="data/raw/extracte
         page = extract_attributes(data)
         pages.append(page)
         fetched += len(page)
+        if max_records is not None and fetched >= max_records:
+          pages[-1] = pages[-1].head(max_records - (fetched - len(page)))
+          return save_csv(pd.concat(pages, ignore_index=True), file_path)
         logger.info("Fetched %d / %d rows (offset %d)", fetched, expected_count, offset)
         returned_all = get_returned_all(data)
     df = pd.concat(pages, ignore_index=True)
