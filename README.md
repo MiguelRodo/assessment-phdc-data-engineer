@@ -8,10 +8,24 @@ For more information, please contact:
 
 - Miguel J. Rodo: miguel.rodo@uct.ac.za
 
+## Execution
+
+To execute the pipeline, run:
+
+```sh
+
+```
+
 ## Links
 
-- [URLs to data sources (e.g. OneDrive), GitHub repositories, publications, etc.]
+- [Instructions repo](https://github.com/wc-phdc-hia/data-competency-assessment)
+- [Data portal](https://odp-cctegis.opendata.arcgis.com/datasets/cctegis::service-requests-2023-until-06-october-2026-deprecated/explore)
 
 ## Details
 
-[Methods, timeline, team, data sources, software/tools, etc.]
+### Method of finding endpoint
+
+1. Navigate to provided URL.
+2. Click `Info`.
+3. Click `View API Resources`.
+4. Copy `GeoService` field.
